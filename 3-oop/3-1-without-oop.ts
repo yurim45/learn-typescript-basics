@@ -1,6 +1,6 @@
-// 절차지향적으로 커피기계 만들기 💡
-
 {
+  // 절차지향적으로 커피기계 만들기 💡
+
   type CoffeeCup = {
     shots: number,
     hasMilk: boolean
