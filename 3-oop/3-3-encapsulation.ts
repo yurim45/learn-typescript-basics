@@ -44,4 +44,28 @@
   // const maker = new CoffeeMaker(32); //constructor가 private level로 되었기 때문에 new 키워드를 사용하면 에러 발생
   const maker = CoffeeMaker.makeMachine(32);
   console.log(maker);
+
+
+  // 추가! 유용한 Getter와 Setter
+  class User {
+    get fullName(): string {
+      return `${this.firstName} ${this.lastName}`
+    }
+    private internalAge = 4;
+    get age(): number {
+      return this.internalAge;
+    }
+    set age(num: number) {
+      this.internalAge = num;
+    }
+    // private firstName: string;
+    // private lastName: string;
+    // 위 두개의 멤버변수 선언을 아래처럼 인자에서 직접 선언하여 사용 가능.
+    constructor(private firstName: string, private lastName: string) {
+      // return `${this.firstName} ${this.lastName}` // 이렇게 return할 경우 외부에서 한번 할당된 fullName값이 연산되지 않으므로 getter를 사용하여 별도로 처리
+    }
+  }
+  const user = new User('yurim', 'kim');
+  user.age = 20;
+  console.log(user.fullName);
 }
