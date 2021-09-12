@@ -1,5 +1,7 @@
 {
-  // 상속의 문제점 👨‍👩‍👧‍👦
+  // 모든것을 뒤엎는 Composition? 🍭
+  // Favor COMPOSITION over inheritance 상속 대신 Composition을 더 선호하라
+  // Composition? 필요한 부분만 조립해서 작업하는 것
 
   type CoffeeCup = {
     shots: number,
@@ -61,32 +63,75 @@
     }
   }
 
-  class CafeLatteMachine extends CoffeeMachine {
-    constructor(coffeeBeans: number, private readonly serialNumber?: string) {
-      super(coffeeBeans)
-    }
-
-    private steamMick(): void {
+  // 우유 거품기
+  class MilkSteamer {
+    private steamMilk(): void {
       console.log('steaming some milk.. 🥛')
     }
-
-    makeCoffee(shots: number): CoffeeCup {
-      const coffee = super.makeCoffee(shots);
-      this.steamMick();
+    makeMilk(cup: CoffeeCup): CoffeeCup {
+      this.steamMilk();
       return {
-        ...coffee,
+        ...cup,
         hasMilk: true
       }
     }
   }
 
-  class SweetCoffeeMaker extends CoffeeMachine {
+  // 설탕 제조기
+  class AutomaticSugarMixer {
+    private getSugar() {
+      console.log('getting some sugar from candy 🍭')
+      return true
+    }
+
+    addSugar(cup: CoffeeCup): CoffeeCup {
+      const sugar = this.getSugar();
+      return {
+        ...cup,
+        hasSugar: sugar,
+      }
+    }
+  }
+
+  class CafeLatteMachine extends CoffeeMachine {
+    constructor(
+      coffeeBeans: number,
+      private readonly serialNumber: string,
+      private milkFother: MilkSteamer
+    ) {
+      super(coffeeBeans)
+    }
+
     makeCoffee(shots: number): CoffeeCup {
       const coffee = super.makeCoffee(shots);
-      return {
-        ...coffee,
-        hasSugar: true
-      }
+      return this.milkFother.makeMilk(coffee)
+    }
+  }
+
+  class SweetCoffeeMaker extends CoffeeMachine {
+    constructor(coffeeBeans: number, private sugar: AutomaticSugarMixer) {
+      super(coffeeBeans)
+    }
+
+    makeCoffee(shots: number): CoffeeCup {
+      const coffee = super.makeCoffee(shots);
+      return this.sugar.addSugar(coffee)
+    }
+  }
+
+  // Composition의 단점? 
+  // class들 끼리 서로 잘 알고 지내게 되면 추 후 확장성, 유지보수성이 떨어진다
+  // SweetCafeLatteeMachine 입장에서 보면 꼭 MilkSteamer에서 우유를 받아올 필요가 없다. 그냥 우유만 받아오면 되는 것! 
+  // 이러한 class 간 커플링을 피하기 위해서는 interface를 활용하면 된다.
+
+  class SweetCafeLatteeMachine extends CoffeeMachine {
+    constructor(coffeeBeans: number, private milkFother: MilkSteamer, private sugar: AutomaticSugarMixer) {
+      super(coffeeBeans)
+    }
+
+    makeCoffee(shots: number): CoffeeCup {
+      const coffee = super.makeCoffee(shots)
+      return this.milkFother.makeMilk(this.sugar.addSugar(coffee));
     }
   }
 
@@ -97,6 +142,7 @@
     new CoffeeMachine(32),
     new CafeLatteMachine(32, 'b123456'),
     new SweetCoffeeMaker(32),
+    new SweetCafeLatteeMachine(32)
   ];
 
   machines.forEach(machine => {
