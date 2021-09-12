@@ -1,7 +1,7 @@
 {
-  // 모든것을 뒤엎는 Composition? 🍭
+  // 이번 챕터의 하이라이트 ✨(강력한 Interface!)
   // Favor COMPOSITION over inheritance 상속 대신 Composition을 더 선호하라
-  // Composition? 필요한 부분만 조립해서 작업하는 것
+  // Composition의 단점을 보완하기
 
   type CoffeeCup = {
     shots: number,
@@ -13,16 +13,104 @@
     makeCoffee(shots: number): CoffeeCup;
   }
 
+  interface MilkFrother {
+    makeMilk(cup: CoffeeCup): CoffeeCup;
+  }
+
+  interface SugarProvider {
+    addSugar(cup: CoffeeCup): CoffeeCup;
+  }
+
+  // 우유 거품기
+  class CheapMilkSteamer implements MilkFrother {
+    private steamMilk(): void {
+      console.log('steaming some milk.. 🥛')
+    }
+    makeMilk(cup: CoffeeCup): CoffeeCup {
+      this.steamMilk();
+      return {
+        ...cup,
+        hasMilk: true
+      }
+    }
+  }
+
+  class FancyMilkSteamer implements MilkFrother {
+    private steamMilk(): void {
+      console.log('Fancy steaming some milk.. 🥛')
+    }
+    makeMilk(cup: CoffeeCup): CoffeeCup {
+      this.steamMilk();
+      return {
+        ...cup,
+        hasMilk: true
+      }
+    }
+  }
+
+  class ColdMilkSteamer implements MilkFrother {
+    private steamMilk(): void {
+      console.log('Cold steaming some milk.. 🥛')
+    }
+    makeMilk(cup: CoffeeCup): CoffeeCup {
+      this.steamMilk();
+      return {
+        ...cup,
+        hasMilk: true
+      }
+    }
+  }
+
+  class NoMilk implements MilkFrother {
+
+    makeMilk(cup: CoffeeCup): CoffeeCup {
+      return cup
+    }
+  }
+
+  // 설탕 제조기
+  class CandySugarMixer implements SugarProvider {
+    private getSugar() {
+      console.log('getting some sugar from candy 🍭')
+      return true
+    }
+
+    addSugar(cup: CoffeeCup): CoffeeCup {
+      const sugar = this.getSugar();
+      return {
+        ...cup,
+        hasSugar: sugar,
+      }
+    }
+  }
+
+  class SugarMixer implements SugarProvider {
+    private getSugar() {
+      console.log('getting some sugar from jar!!!!🐝')
+      return true
+    }
+
+    addSugar(cup: CoffeeCup): CoffeeCup {
+      const sugar = this.getSugar();
+      return {
+        ...cup,
+        hasSugar: sugar,
+      }
+    }
+  }
+
+  class NoSugar implements SugarProvider {
+    addSugar(cup: CoffeeCup): CoffeeCup {
+      return cup
+    }
+  }
+
   class CoffeeMachine implements CoffeeMaker {
     private static BEANS_GRAMM_PER_SHOT: number = 7;
     private coffeeBeans: number = 0;
 
-    constructor(coffeeBeans: number) {
+    constructor(coffeeBeans: number, private milk: MilkFrother, private suger: SugarProvider) {
       this.coffeeBeans = coffeeBeans;
-    }
-
-    static makeMachine(coffeeBeans: number): CoffeeMachine {
-      return new CoffeeMachine(coffeeBeans)
     }
 
     fillCoffeeBeans(beens: number) {
@@ -59,94 +147,28 @@
     makeCoffee(shots: number): CoffeeCup {
       this.grindBeans(shots);
       this.preheat();
-      return this.extract(shots);
+      const coffee = this.extract(shots);
+      const sugarAdded = this.suger.addSugar(coffee);
+      return this.milk.makeMilk(sugarAdded);
     }
   }
 
-  // 우유 거품기
-  class MilkSteamer {
-    private steamMilk(): void {
-      console.log('steaming some milk.. 🥛')
-    }
-    makeMilk(cup: CoffeeCup): CoffeeCup {
-      this.steamMilk();
-      return {
-        ...cup,
-        hasMilk: true
-      }
-    }
-  }
+  // milk
+  const cheapMilkSteamer = new CheapMilkSteamer();
+  const fancyMilkSteamer = new FancyMilkSteamer();
+  const coldMilkSteamer = new ColdMilkSteamer();
+  const noMilk = new NoMilk();
 
-  // 설탕 제조기
-  class AutomaticSugarMixer {
-    private getSugar() {
-      console.log('getting some sugar from candy 🍭')
-      return true
-    }
+  // sugar
+  const candySugar = new CandySugarMixer();
+  const Sugar = new SugarMixer();
+  const noSugar = new NoSugar();
 
-    addSugar(cup: CoffeeCup): CoffeeCup {
-      const sugar = this.getSugar();
-      return {
-        ...cup,
-        hasSugar: sugar,
-      }
-    }
-  }
-
-  class CafeLatteMachine extends CoffeeMachine {
-    constructor(
-      coffeeBeans: number,
-      private readonly serialNumber: string,
-      private milkFother: MilkSteamer
-    ) {
-      super(coffeeBeans)
-    }
-
-    makeCoffee(shots: number): CoffeeCup {
-      const coffee = super.makeCoffee(shots);
-      return this.milkFother.makeMilk(coffee)
-    }
-  }
-
-  class SweetCoffeeMaker extends CoffeeMachine {
-    constructor(coffeeBeans: number, private sugar: AutomaticSugarMixer) {
-      super(coffeeBeans)
-    }
-
-    makeCoffee(shots: number): CoffeeCup {
-      const coffee = super.makeCoffee(shots);
-      return this.sugar.addSugar(coffee)
-    }
-  }
-
-  // Composition의 단점? 
-  // class들 끼리 서로 잘 알고 지내게 되면 추 후 확장성, 유지보수성이 떨어진다
-  // SweetCafeLatteeMachine 입장에서 보면 꼭 MilkSteamer에서 우유를 받아올 필요가 없다. 그냥 우유만 받아오면 되는 것! 
-  // 이러한 class 간 커플링을 피하기 위해서는 interface를 활용하면 된다.
-
-  class SweetCafeLatteeMachine extends CoffeeMachine {
-    constructor(coffeeBeans: number, private milkFother: MilkSteamer, private sugar: AutomaticSugarMixer) {
-      super(coffeeBeans)
-    }
-
-    makeCoffee(shots: number): CoffeeCup {
-      const coffee = super.makeCoffee(shots)
-      return this.milkFother.makeMilk(this.sugar.addSugar(coffee));
-    }
-  }
-
-  const machines: CoffeeMaker[] = [
-    new CoffeeMachine(16),
-    new CafeLatteMachine(16, 'a123456'),
-    new SweetCoffeeMaker(16),
-    new CoffeeMachine(32),
-    new CafeLatteMachine(32, 'b123456'),
-    new SweetCoffeeMaker(32),
-    new SweetCafeLatteeMachine(32)
-  ];
-
-  machines.forEach(machine => {
-    console.log('--------------------------');
-    machine.makeCoffee(2);
-  })
+  // machine
+  const sweetCandyMachine = new CoffeeMachine(12, noMilk, candySugar);
+  const sweetSugarMachine = new CoffeeMachine(12, noMilk, sugar);
+  const latteMachine = new CoffeeMachine(12, cheapMilkSteamer, noSugar);
+  const fancyLatteMachine = new CoffeeMachine(12, fancyMilkSteamer, candySugar);
+  const coldLatteMachine = new CoffeeMachine(12, coldMilkSteamer, Sugar);
+  const sweetLatteMachine = new CoffeeMachine(12, cheapMilkSteamer, candySugar);
 }
