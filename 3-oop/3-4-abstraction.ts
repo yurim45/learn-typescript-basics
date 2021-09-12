@@ -15,9 +15,14 @@
   // CoffeeMaker class의 사용 계약서?! interface 키워드로 선언
   // interface 이름은 외부적으로 사용하는 것이기 때문에 의도 그대로 사용하고, class 명에서 변경.
   interface CoffeeMaker {
-    makeCoffee(shots: number): CoffeeCup,
+    makeCoffee(shots: number): CoffeeCup;
   }
-  class CoffeeMachine implements CoffeeMaker {
+  interface CommercialCoffeeMaker {
+    makeCoffee(shots: number): CoffeeCup;
+    fillCoffeeBeans(beens: number): void;
+    clean(): void;
+  }
+  class CoffeeMachine implements CoffeeMaker, CommercialCoffeeMaker {
     private static BEANS_GRAMM_PER_SHOT: number = 7;
     private coffeeBeans: number = 0;
 
@@ -36,12 +41,16 @@
       this.coffeeBeans += beens;
     }
 
+    clean() {
+      console.log('cleaning the machine.. 🧼')
+    }
+
     private grindBeans(shots: number) {
       console.log(`grinding beans for ${shots}`);
       if (this.coffeeBeans < shots * CoffeeMachine.BEANS_GRAMM_PER_SHOT) {
         throw new Error('Not enough coffee beans!')
       }
-      this.coffeeBeans -= shots * CoffeeMaker.BEANS_GRAMM_PER_SHOT;
+      this.coffeeBeans -= shots * CoffeeMachine.BEANS_GRAMM_PER_SHOT;
     }
 
     private preheat(): void { // void: 함수의 return값이 없을 때 지정. 생략 가능
@@ -63,10 +72,30 @@
     }
   }
 
-  const maker: CoffeeMachine = CoffeeMachine.makeMachine(32);
-  maker.fillCoffeeBeans(32);
-  maker.makeCoffee(2);
+  // 동일한 object의 instance일지라도 이 object는 두 가지의 interface를 구현하기 때문에
+  // AmateurUser와 ProBarista는 class 전부를 받아오는 게 아닌, 조금 더 좁은 범위인
+  // 각각의 interface로 정의 된 CoffeeMaker와 CommercialCoffeeMaker를 받아온다.
+  class AmateurUser {
+    constructor(private machine: CoffeeMaker) { }
+    makeCoffee() {
+      const coffee = this.machine.makeCoffee(2);
+      console.log(coffee)
+    }
+  }
+  class ProBarista {
+    constructor(private machine: CommercialCoffeeMaker) { }
+    makeCoffee() {
+      const coffee = this.machine.makeCoffee(2);
+      console.log(coffee);
+      this.machine.fillCoffeeBeans(32);
+      this.machine.clean();
+    }
+  }
 
-  const maker2: CoffeeMaker = CoffeeMachine.makeMachine(32);
-  maker2.makeCoffee(2);
+  const maker: CoffeeMachine = CoffeeMachine.makeMachine(32);
+  const amateur = new AmateurUser(maker);
+  const proBarista = new ProBarista(maker);
+
+  amateur.makeCoffee();
+  proBarista.makeCoffee();
 }
