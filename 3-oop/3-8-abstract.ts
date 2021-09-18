@@ -1,4 +1,8 @@
 {
+  // Abstract 클래스 사용 예시
+  // class에서 절차적으로 진행되고, 어떤 특정한 기능만 자식 class에서 행동이 달라진다면
+  // abstract class를 만들어 볼 수 있다
+
   type CoffeeCup = {
     shots: number;
     hasMilk?: boolean;
@@ -9,6 +13,7 @@
     makeCoffee(shots: number): CoffeeCup;
   }
 
+  // abstract 키워드를 사용하여 추상적임을 명시허개 되면 CoffeeMachine 자체로는 object(instance)를 만들 수 없다
   abstract class CoffeeMachine implements CoffeeMaker {
     private static BEANS_GRAMM_PER_SHOT: number = 7; // class level
     private coffeeBeans: number = 0; // instance (object) level
@@ -40,6 +45,8 @@
       console.log('heating up... 🔥');
     }
 
+    // 자식 class마다 행동이 바뀔 수 있는 함수에 protected level로 지정하고 abstract 키워드를 사용
+    // 추상적이므로 명확한 구현사항이 있으면 안된다.
     protected abstract extract(shots: number): CoffeeCup;
 
     makeCoffee(shots: number): CoffeeCup {
@@ -57,6 +64,7 @@
       console.log('Steaming some milk... 🥛');
     }
 
+    // abstract로 선언된 함수의 구체적인 구현 사항은 여기서 정의
     protected extract(shots: number): CoffeeCup {
       this.steamMilk();
       return {
@@ -67,6 +75,7 @@
   }
 
   class SweetCoffeeMaker extends CoffeeMachine {
+    // abstract로 선언된 함수의 구체적인 구현 사항은 여기서 정의
     protected extract(shots: number): CoffeeCup {
       return {
         shots,
