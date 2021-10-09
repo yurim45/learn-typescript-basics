@@ -33,5 +33,5 @@
   }
 
   const number = checkNotNull(123); // 함수를 호출하는 동시에 number으로 정의 됨
-  const bool: boolean = checkNotNull(true); // 함수의 결과를 받을 때, 타입을 지정해주면 타입이 좀 더 명확하다
+  const bool: boolean = checkNotNull(true); // 함수의 결과를 받을 때, 타입을 지정해주면 타입이 좀 더 명확해진다
 }

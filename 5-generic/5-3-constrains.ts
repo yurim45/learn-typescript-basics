@@ -37,6 +37,8 @@ jh.workPartTime();
 const yrAfterPay = pay(yr);
 const jhAfterPay = pay(jh);
 
+
+// 제네릭 조건 예제
 const obj = {
   name: 'yrKim',
   age: 20,

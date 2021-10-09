@@ -1,5 +1,5 @@
 // 객체지향 challenge! 🔥
-// Array과 Array에서 제공하는 method를 사용하지 않고 stack 구현하기!
+// Array와 Array에서 제공하는 method를 사용하지 않고 stack 구현하기!
 // 단일 linked list로 구현하기! (↔︎ 이중 연결 리스트)
 // 하나의 요소를 노드라고 하고, 
 // 첫 번째 노드를 head라고 하고, 마지막 노드를 tail 이라고 한다.
