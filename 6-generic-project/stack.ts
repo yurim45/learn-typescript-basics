@@ -9,9 +9,9 @@ interface Stack<T> {
 type StackNode<T> = {
   readonly value: T;
   readonly next?: StackNode<T>;
-}
+};
 
-class StackImpl<T> implements Stack {
+class StackImpl<T> implements Stack<T> {
   private _size: number = 0;
   private head?: StackNode<T>;
 
@@ -19,22 +19,17 @@ class StackImpl<T> implements Stack {
   get size() {
     return this._size;
   }
-
   push(value: T) {
     if (this.size === this.capacity) {
-      throw new Error('Stack is full!!')
+      throw new Error('Stack is full!');
     }
-    const node = {
-      value,
-      next: this.head
-    }
+    const node = { value, next: this.head };
     this.head = node;
     this._size++;
   }
-
   pop(): T {
     if (this.head == null) {
-      throw new Error('Stack is empty!')
+      throw new Error('Stack is empty!');
     }
     const node = this.head;
     this.head = node.next;
