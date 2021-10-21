@@ -36,7 +36,7 @@
     console.log(lastName); // undefined
   }
   printName('Steve', 'Jobs');
-  printName('Ellie');
+  printName('april');
   printName('Anna');
 
   // Default parameter

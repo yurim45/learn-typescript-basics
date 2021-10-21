@@ -21,11 +21,11 @@
   const animal: Optional<Animal> = {
     name: 'dog',
   };
-  animal.name = 'ellie';
+  animal.name = 'april';
 
   const video: ReadOnly<Video> = {
     title: 'hi',
-    author: 'ellie',
+    author: 'april',
   };
 
   // type VideoOptional = {

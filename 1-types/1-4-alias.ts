@@ -3,7 +3,7 @@
    * Type Aliases
    */
   type Text = string;
-  const name: Text = 'ellie';
+  const name: Text = 'april';
   const address: Text = 'korea';
   type Num = number;
   type Student = {
@@ -11,7 +11,7 @@
     age: number;
   };
   const student: Student = {
-    name: 'ellie',
+    name: 'april',
     age: 12,
   };
 
@@ -19,8 +19,8 @@
    * String Literal Types
    */
   type Name = 'name';
-  let ellieName: Name;
-  ellieName = 'name';
+  let aprilName: Name;
+  aprilName = 'name';
   type JSON = 'json';
   const json: JSON = 'json';
 

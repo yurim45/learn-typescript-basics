@@ -17,9 +17,9 @@
   }
 
   internWork({
-    name: 'ellie',
+    name: 'april',
     score: 1,
     empolyeeId: 123,
-    work: () => {},
+    work: () => { },
   });
 }

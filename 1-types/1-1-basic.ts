@@ -47,13 +47,13 @@
   function throwError(message: string): never {
     // message -> server (log)
     throw new Error(message);
-    while (true) {}
+    while (true) { }
   }
   let neverEnding: never; // 💩
 
   // objet
   let obj: object; // 💩
-  function acceptSomeObject(obj: object) {}
-  acceptSomeObject({ name: 'ellie' });
+  function acceptSomeObject(obj: object) { }
+  acceptSomeObject({ name: 'april' });
   acceptSomeObject({ animal: 'dog' });
 }

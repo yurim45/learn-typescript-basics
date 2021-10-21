@@ -40,7 +40,7 @@ const jhAfterPay = pay(jh);
 
 // 제네릭 조건 예제
 const obj = {
-  name: 'yrKim',
+  name: 'april',
   age: 20,
 };
 
@@ -48,7 +48,7 @@ const obj2 = {
   animal: '🐕',
 };
 
-console.log(getValue(obj, 'name')); // yrKim
+console.log(getValue(obj, 'name')); // april
 console.log(getValue(obj, 'age')); // 20
 console.log(getValue(obj2, 'animal')); // 🐕
 
