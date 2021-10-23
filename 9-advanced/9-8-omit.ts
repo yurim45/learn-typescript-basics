@@ -1,4 +1,8 @@
 {
+  // Omit Type
+  // pick과 반대로 원하는 것을 제외하고 type을 정의
+
+
   type Video = {
     id: string;
     title: string;
@@ -6,7 +10,7 @@
     data: string;
   };
 
-  type VideoMetadata = Omit<Video, 'url' | 'data'>;
+  type VideoMetadata = Omit<Video, 'url' | 'data'>;  // 'url' | 'data'을 제외하고 type VideoMetadata을 정의
 
   function getVideo(id: string): Video {
     return {
