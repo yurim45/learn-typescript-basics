@@ -8,14 +8,15 @@ console.log(x.__proto__ === y.__proto__);
 const array = [];
 console.log(array);
 
-console.clear();
+console.log('=======================');
 
-function CoffeeMachine(beans) {
+// 객체와 배열은 모두 같은 Object를 상속받고 있다
+function CoffeeMachine(beans) {  // 인자로 받아온 beans는 constructor(생성자)와 비슷한 역할을 한다
   this.beans = beans;
   // Instance member level
-  /* this.makeCoffee = shots => {
-    console.log('making... ☕️');
-  }; */
+  // this.makeCoffee = shots => {
+  //   console.log('making... ☕️');
+  // };
 }
 // Prototype member level
 CoffeeMachine.prototype.makeCoffee = shots => {
@@ -29,6 +30,8 @@ console.log(machine2);
 function LatteMachine(milk) {
   this.milk = milk;
 }
+
+// LatteMachine의 prototype에 CoffeeMachine의 prototype을 연결해준다
 LatteMachine.prototype = Object.create(CoffeeMachine.prototype);
 
 const latteMachine = new LatteMachine(123);
